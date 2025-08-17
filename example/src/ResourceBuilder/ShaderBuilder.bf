@@ -7,8 +7,8 @@ namespace Example
 	public class ShaderBuilder : ResourceBuilder
 	{
 #if BF_PLATFORM_WINDOWS
-		private const String VSFlags = "--platform windows --profile vs_4_0 -O 3";
-		private const String FSFlags = "--platform windows --profile ps_4_0 -O 3";
+		private const String VSFlags = "--platform windows --profile s_4_0 -O 3";
+		private const String FSFlags = "--platform windows --profile s_4_0 -O 3";
 #elif BF_PLATFORM_MACOS
 		private const String VSFlags = "--platform osx -p metal -O 3";
 		private const String FSFlags = "--platform osx -p metal -O 3";

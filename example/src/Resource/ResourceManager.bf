@@ -186,45 +186,34 @@ namespace Example
 		}
 
 #if BF_PLATFORM_WINDOWS
-	const String ToolsPath = "/../submodules/bgfx/.build/win64_vs2019/bin/";
-	const String ToolsPath2 = "/../submodules/bgfx/.build/win64_vs2017/bin/";
+	const String[?] ToolsPath = .(
+		"/../submodules/bgfx/.build/win64_vs2022/bin/",
+		"/../submodules/bgfx/.build/win64_vs2019/bin/",
+		"/../submodules/bgfx/.build/win64_vs2017/bin/");
 #elif BF_PLATFORM_MACOS
-	const String ToolsPath = "/../submodules/bgfx/.build/osx-x64/bin/";
-	const String ToolsPath2 = "/../submodules/bgfx/.build/osx-x64/bin/";
+	const String[?] ToolsPath = .("/../submodules/bgfx/.build/osx-x64/bin/");
 #elif BF_PLATFORM_LINUX
-	const String ToolsPath = "/../submodules/bgfx/.build/linux64_gcc/bin/";
-	const String ToolsPath2 = "/../submodules/bgfx/.build/linux64_gcc/bin/";
+	const String[?] ToolsPath = .("/../submodules/bgfx/.build/linux64_gcc/bin/");
 #endif
 
 		private static void InitializeRuntimeBuild(String path)
 		{
 			Log.Info(scope $"InitializeRuntimeBuild '{path}'!");
 			canBuild = System.IO.Directory.Exists(buildtimeResourcesPath);
-			// Find tools (either VS2019 or VS2017)
+
 			if (canBuild)
 			{
-				buildtimeToolsPath.Append(ToolsPath);
-				Log.Info(scope $"Checking build path '{buildtimeToolsPath}'!");
-				if (System.IO.Directory.Exists(buildtimeToolsPath))
-				{
-					Log.Info("Found!");
-				}
-				else 
-				{
-					canBuild = false;
-				}
-				if (!canBuild)
-				{
-					buildtimeToolsPath.Clear();
-					buildtimeToolsPath.Append(ToolsPath2);
+				canBuild = false;
+				for (let toolsPath in ToolsPath) {
+					buildtimeToolsPath.Set(path);
+					buildtimeToolsPath.Append(toolsPath);
+					
 					Log.Info(scope $"Checking build path '{buildtimeToolsPath}'!");
 					if (System.IO.Directory.Exists(buildtimeToolsPath))
 					{
 						Log.Info("Found!");
-					}
-					else
-					{
-						canBuild = false;
+						canBuild = true;
+						break;
 					}
 				}
 				if (canBuild)
