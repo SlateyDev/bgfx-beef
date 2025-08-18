@@ -15,6 +15,9 @@ namespace Example
 #elif BF_PLATFORM_LINUX
 		private const String VSFlags = "--platform linux -O 3";
 		private const String FSFlags = "--platform linux -O 3";
+#elif BF_PLATFORM_WASM
+		private const String VSFlags = "--platform windows --profile s_4_0 -O 3";
+		private const String FSFlags = "--platform windows --profile s_4_0 -O 3";
 #endif
 
 		public override String Extension => "shader";

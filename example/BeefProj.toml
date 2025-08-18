@@ -5,3 +5,15 @@ Dependencies = {corlib = "*", bgfx-beef = "*", SDL2 = "*"}
 Name = "example"
 StartupObject = "Example.Program"
 DefaultNamespace = "Example"
+
+[Configs.Debug.wasm32]
+OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2"
+
+[Configs.Release.wasm32]
+OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2"
+
+[Configs.Paranoid.wasm32]
+OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2"
+
+[Configs.Test.wasm32]
+OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2"

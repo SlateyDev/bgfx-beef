@@ -3,3 +3,18 @@ Projects = {bgfx-beef = {Path = "."}, example = {Path = "example"}, SDL2 = "*"}
 
 [Workspace]
 StartupProject = "example"
+
+[Configs.Debug.wasm32]
+AllocType = "CRT"
+EnableObjectDebugFlags = false
+EmitObjectAccessCheck = false
+
+[Configs.Paranoid.wasm32]
+AllocType = "CRT"
+EnableObjectDebugFlags = false
+EmitObjectAccessCheck = false
+
+[Configs.Test.wasm32]
+AllocType = "CRT"
+EnableObjectDebugFlags = false
+EmitObjectAccessCheck = false

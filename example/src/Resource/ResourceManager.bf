@@ -194,6 +194,9 @@ namespace Example
 	const String[?] ToolsPath = .("/../submodules/bgfx/.build/osx-x64/bin/");
 #elif BF_PLATFORM_LINUX
 	const String[?] ToolsPath = .("/../submodules/bgfx/.build/linux64_gcc/bin/");
+#elif BF_PLATFORM_WASM
+	const String[?] ToolsPath = .(
+		"/../submodules/bgfx/.build/win64_vs2022/bin/");
 #endif
 
 		private static void InitializeRuntimeBuild(String path)
@@ -290,11 +293,13 @@ namespace Example
 		public static void SetRootPath(String path)
 		{			
 			String.NewOrSet!(runtimeResourcesPath, path);
+#if !BF_PLATFORM_WASM
 			runtimeResourcesPath.Append("/runtime/resources/");
 			String.NewOrSet!(buildtimeResourcesPath, path);
 			buildtimeResourcesPath.Append("/buildtime/resources/");
 			String.NewOrSet!(buildtimeToolsPath, path);
 			InitializeRuntimeBuild(path);
+#endif
 			if (!System.IO.Directory.Exists(runtimeResourcesPath))
 			{
 				Utils.ShowMessageBoxOK("ERROR", scope $"Runtime folder '{runtimeResourcesPath}' missing!");

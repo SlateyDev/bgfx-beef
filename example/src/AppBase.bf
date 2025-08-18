@@ -10,6 +10,23 @@ namespace Example
 {
 	public abstract class AppBase
 	{
+#if BF_PLATFORM_WASM
+		private function void em_callback_func();
+
+		[CLink, CallingConvention(.Stdcall)]
+		private static extern void emscripten_set_main_loop(em_callback_func func, int32 fps, int32 simulateInfinteLoop);
+
+		[CLink, CallingConvention(.Stdcall)]
+		private static extern int32 emscripten_set_main_loop_timing(int32 mode, int32 value);
+
+		[CLink, CallingConvention(.Stdcall)]
+		private static extern double emscripten_get_now();
+
+		private static void EmscriptenMainLoop() {
+			gApp.OneFrame();
+		}
+#endif
+
 		public SDL.Window* mWindow;
 		public int32 mUpdateCnt;
 		public String mTitle = new .("Bgfx-Beef PixelArt game example") ~ delete _;
@@ -64,16 +81,22 @@ namespace Example
 			platformData.ndt = null;
 #if BF_PLATFORM_WINDOWS
 			platformData.nwh = (void*)(int)info.info.win.window;
-			#elif BF_PLATFORM_MACOS
-						platformData.nwh = (void*)(int)info.info.cocoa.window;
-			#elif BF_PLATFORM_LINUX
-						platformData.nwh = (void*)(int)info.info.x11.window;
+#elif BF_PLATFORM_MACOS
+			platformData.nwh = (void*)(int)info.info.cocoa.window;
+#elif BF_PLATFORM_LINUX
+			platformData.nwh = (void*)(int)info.info.x11.window;
+#elif BF_PLATFORM_WASM
+			platformData.nwh = (void*)"#canvas";
 #endif
-			bgfx.render_frame(0);
+			//bgfx.render_frame(0);
 
 			var init = bgfx.Init();
 			init.platformData = platformData;
+#if BF_PLATFORM_WASM
+			init.type = .OpenGL;
+#else
 			init.type = .Direct3D11;
+#endif
 			init.capabilities = uint64.MaxValue;
 			init.resolution.format = .RGBA8;
 			init.resolution.width = (uint32)mWidth;
@@ -213,49 +236,56 @@ namespace Example
 			OnPostRender();
 		}
 
-		public void Run()
+		private bool OneFrame()
 		{
-			var quitting = false;
-			while (!quitting)
+			mouseDelta = .sZero;
+			SDL.Event event;
+			while (SDL.PollEvent(out event) != 0)
 			{
-				mouseDelta = .sZero;
-				SDL.Event event;
-				while (SDL.PollEvent(out event) != 0)
+				switch (event.type)
 				{
-					switch (event.type)
-					{
-					case .Quit:
-						quitting = true;
-					case .KeyDown:
-						KeyDown(event.key);
-					case .KeyUp:
-						KeyUp(event.key);
-					case .MouseButtonDown:
-						MouseDown(event.button);
-					case .MouseButtonUp:
-						MouseUp(event.button);
-					case .MouseMotion:
-						mouseDelta.mX += event.motion.xrel;
-						mouseDelta.mY += event.motion.yrel;
-					case .WindowEvent:
-						switch (event.window.windowEvent) {
-						case .SizeChanged:
-							mWidth = event.window.data1;
-							mHeight = event.window.data2;
-							bgfx.reset((uint32)mWidth, (uint32)mHeight, (uint32)bgfx.ResetFlags.Vsync, bgfx.TextureFormat.Count);
-							Log.Debug("Window resized to {0}x{1}!", mWidth, mHeight);
-						default:
-						}
+				case .Quit:
+					return false;
+				case .KeyDown:
+					KeyDown(event.key);
+				case .KeyUp:
+					KeyUp(event.key);
+				case .MouseButtonDown:
+					MouseDown(event.button);
+				case .MouseButtonUp:
+					MouseUp(event.button);
+				case .MouseMotion:
+					mouseDelta.mX += event.motion.xrel;
+					mouseDelta.mY += event.motion.yrel;
+				case .WindowEvent:
+					switch (event.window.windowEvent) {
+					case .SizeChanged:
+						mWidth = event.window.data1;
+						mHeight = event.window.data2;
+						bgfx.reset((uint32)mWidth, (uint32)mHeight, (uint32)bgfx.ResetFlags.Vsync, bgfx.TextureFormat.Count);
+						Log.Debug("Window resized to {0}x{1}!", mWidth, mHeight);
 					default:
 					}
-					HandleEvent(event);
+				default:
 				}
-
-				mKeyboardState = SDL.GetKeyboardState(null);
-
-				Update();
-				Render();
+				HandleEvent(event);
 			}
+
+			mKeyboardState = SDL.GetKeyboardState(null);
+
+			Update();
+			Render();
+
+			return true;
+		}
+
+		public void Run()
+		{
+#if BF_PLATFORM_WASM
+	        emscripten_set_main_loop(=> EmscriptenMainLoop, 0, 1);
+#else
+			while (OneFrame()) {}
+#endif
 		}
 	}
 

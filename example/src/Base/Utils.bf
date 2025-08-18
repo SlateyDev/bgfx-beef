@@ -70,7 +70,7 @@ namespace Example
 			case .Err:
 				return false;
 			}
-			data = new uint8[file.Length];
+			data = new uint8[(int)file.Length];
 			file.TryRead(Span<uint8>(data));
 			file.Close();
 			return true;

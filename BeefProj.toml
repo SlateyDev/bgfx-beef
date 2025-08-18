@@ -50,3 +50,15 @@ LibPaths = ["$(ProjectDir)\\submodules\\bgfx\\.build\\linux64_gcc\\bin\\libbgfxR
 [Configs.Test.Linux64]
 OtherLinkFlags = "$(LinkFlags) -lGL -lXext -lX11"
 LibPaths = ["$(ProjectDir)\\submodules\\bgfx\\.build\\linux64_gcc\\bin\\libbgfxRelease.a", "$(ProjectDir)\\submodules\\bgfx\\.build\\linux64_gcc\\bin\\libbimgRelease.a", "$(ProjectDir)\\submodules\\bgfx\\.build\\linux64_gcc\\bin\\libbxRelease.a"]
+
+[Configs.Debug.wasm32]
+OtherLinkFlags = "$(LinkFlags) $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bxDebug.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bimgDebug.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bimg_decodeDebug.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bgfxDebug.a -sMIN_WEBGL_VERSION=2 -sINITIAL_MEMORY=67108864 -sALLOW_MEMORY_GROWTH=1"
+
+[Configs.Release.wasm32]
+OtherLinkFlags = "$(LinkFlags) $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bxRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bimgRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bimg_decodeRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bgfxRelease.a -sMIN_WEBGL_VERSION=2 -sINITIAL_MEMORY=67108864 -sALLOW_MEMORY_GROWTH=1"
+
+[Configs.Paranoid.wasm32]
+OtherLinkFlags = "$(LinkFlags) $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bxRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bimgRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bimg_decodeRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bgfxRelease.a -sMIN_WEBGL_VERSION=2 -sINITIAL_MEMORY=67108864 -sALLOW_MEMORY_GROWTH=1"
+
+[Configs.Test.wasm32]
+OtherLinkFlags = "$(LinkFlags) $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bxRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bimgRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bimg_decodeRelease.a $(ProjectDir)/submodules/bgfx/.build/wasm/bin/bgfxRelease.a -sMIN_WEBGL_VERSION=2 -sINITIAL_MEMORY=67108864 -sALLOW_MEMORY_GROWTH=1"
