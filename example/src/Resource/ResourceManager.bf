@@ -299,18 +299,38 @@ namespace Example
 			buildtimeResourcesPath.Append("/buildtime/resources/");
 			String.NewOrSet!(buildtimeToolsPath, path);
 			InitializeRuntimeBuild(path);
-#endif
+
 			if (!System.IO.Directory.Exists(runtimeResourcesPath))
 			{
 				Utils.ShowMessageBoxOK("ERROR", scope $"Runtime folder '{runtimeResourcesPath}' missing!");
 				System.Environment.Exit(1);
 			}
+#else
+            ForceAddResource<Shader>("shaders/background", "background");
+            ForceAddResource<Shader>("shaders/blit", "blit");
+            ForceAddResource<Shader>("shaders/generic_texture", "generic_texture");
+            ForceAddResource<Texture>("textures/cloud_1", "cloud_1");
+            ForceAddResource<Texture>("textures/cloud_2", "cloud_2");
+            ForceAddResource<Texture>("textures/cloud_3", "cloud_3");
+            ForceAddResource<Texture>("textures/raindrop", "raindrop");
+#endif
 		}
+
+        public static void ForceAddResource<T>(String name, String hash) where T: Resource {
+            var resource = (T)typeof(T).CreateObject();
+            resource.Initialize(new String(name), hash);
+            resourceMap.Add(hash, resource);
+        }
 
 		public static T GetResource<T>(StringView path, bool load = true) where T : Resource
 		{
 			var hashString = scope String();
+#if !BF_PLATFORM_WASM
 			GetPathHash(path, hashString);
+#else
+			Path.GetFileName(path, hashString);
+            Console.WriteLine(hashString);
+#endif
 			if (resourceMap.TryGetValue(hashString, var resource))
 			{
 				if (!(resource is T))

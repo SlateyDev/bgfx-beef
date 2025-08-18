@@ -33,6 +33,14 @@ namespace Example
 			var fsHandle = bgfx.create_shader(fsMemory);
 
 			Handle = bgfx.create_program(vsHandle, fsHandle, true);
+			if (Handle.Valid)
+			{
+				Console.WriteLine("Shader loaded: {0}", Name);
+			}
+			else
+			{
+				Console.WriteLine("Failed to load shader: {0}", Name);
+			}
 
 			delete vsBinaryData;
 			delete fsBinaryData;

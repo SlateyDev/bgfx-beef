@@ -7,13 +7,13 @@ StartupObject = "Example.Program"
 DefaultNamespace = "Example"
 
 [Configs.Debug.wasm32]
-OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2"
+OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2 -sEXPORTED_RUNTIME_METHODS=requestFullscreen --preload-file $(ProjectDir)/runtime/resources@/"
 
 [Configs.Release.wasm32]
-OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2"
+OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2 -sEXPORTED_RUNTIME_METHODS=requestFullscreen --preload-file $(ProjectDir)/runtime/resources@/"
 
 [Configs.Paranoid.wasm32]
-OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2"
+OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2 -sEXPORTED_RUNTIME_METHODS=requestFullscreen --preload-file $(ProjectDir)/runtime/resources@/"
 
 [Configs.Test.wasm32]
-OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2"
+OtherLinkFlags = "$(LinkFlags) -sUSE_SDL=2 -sEXPORTED_RUNTIME_METHODS=requestFullscreen --preload-file $(ProjectDir)/runtime/resources@/"

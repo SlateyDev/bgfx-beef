@@ -31,7 +31,10 @@ namespace Example
 			{
 				Width = (int)info.width;
 				Height = (int)info.height;
-			}
+                Console.WriteLine($"Texture size = {info.width},{info.height}");
+			} else {
+                Console.WriteLine("Invalid Texture");
+            }
 
 			delete binaryData;
 		}
